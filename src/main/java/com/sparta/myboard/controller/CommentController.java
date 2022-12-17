@@ -11,32 +11,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/comment")
+@RequestMapping("/api/posts/{postId}/comments")
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
     // 댓글 작성
-    @PostMapping("/{id}")
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long id,
+    @PostMapping("/")
+    public CommentResponseDto createComment(@PathVariable Long id,
                                                             @RequestBody CommentRequestDto commentRequestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(commentService.createComment(id, commentRequestDto, userDetails.getUser()));
+        return commentService.createComment(id, commentRequestDto, userDetails.getUser());
     }
     // 댓글 수정
-    @PutMapping("/{postId}/{cmtId}")
-    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long postId, @PathVariable Long cmtId,
+    @PutMapping("/{commentId}")
+    public CommentResponseDto updateComment(@PathVariable Long postId, @PathVariable Long cmtId,
                                                             @RequestBody CommentRequestDto commentRequestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(commentService.updateComment(postId, cmtId, commentRequestDto, userDetails.getUser()));
+        return commentService.updateComment(postId, cmtId, commentRequestDto, userDetails.getUser());
     }
     //댓글 삭제
-    @DeleteMapping("/{postId}/{cmtId}")
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<MsgResponseDto> deleteComment(@PathVariable Long postId,
                                                         @PathVariable Long cmtId,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.deleteComment(postId, cmtId, userDetails.getUser());
-        return ResponseEntity.ok(new MsgResponseDto("삭제를 성공했습니다.", HttpStatus.OK.value()));
+        return ResponseEntity.ok(new MsgResponseDto("삭제를 성공했습니다."));
     }
 }
