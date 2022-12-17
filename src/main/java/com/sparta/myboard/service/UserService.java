@@ -21,55 +21,46 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
-    // ADMIN_TOKEN
-    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     @Transactional
-    public MsgResponseDto signup(SignupRequestDto signupRequestDto){
+    public void signup(SignupRequestDto signupRequestDto){
         //받아온 유저네임과 패스워드를 변수에 저장
-        String username = signupRequestDto.getLoginId();
+        String loginId = signupRequestDto.getLoginId();
+        String nickname = signupRequestDto.getNickname();
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         //회원 중복 확인, 받아온 값이 유저레포지토리에 있는지 확인
-        Optional<User> found = userRepository.findByUsername(username);
-        if (found.isPresent()) { //존재하는 것을 찾았다면 에러처리
-            throw new IllegalArgumentException("중복된 username 입니다.");
+        Optional<User> foundId = userRepository.findByUsername(loginId);
+        if (foundId.isPresent()) { //존재하는 것을 찾았다면 에러처리
+            throw new IllegalArgumentException("중복된 loginId 입니다.");
         }
 
-        // 사용자 ROLE 확인
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (signupRequestDto.isAdmin()) {
-            if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
-            }
-            role = UserRoleEnum.ADMIN;
+        Optional<User> foundNickname = userRepository.findByUsername(nickname);
+        if (foundNickname.isPresent()) { //존재하는 것을 찾았다면 에러처리
+            throw new IllegalArgumentException("중복된 nickname 입니다.");
         }
 
         //user 객체에 두 값을 저장
-        User user = new User(username, password, role);
+        User user = new User(loginId, nickname, password);
         userRepository.save(user);
-
-        return new MsgResponseDto("회원가입 성공", HttpStatus.OK.value());
     }
 
     @Transactional(readOnly = true)
-    public MsgResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response){
-        String username = loginRequestDto.getUsername();
+    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response){
+        String loginId = loginRequestDto.getLoginId();
         String password = loginRequestDto.getPassword();
 
         //사용자 확인
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+        User user = userRepository.findByUsername(loginId).orElseThrow(
+                () -> new IllegalArgumentException("등록된 ID가 없습니다.")
         );
 
         //비밀번호 확인
         if(!passwordEncoder.matches(password, user.getPassword())){
-            throw  new IllegalArgumentException("회원을 찾을 수 없습니다.");
+            throw  new IllegalArgumentException("패스워드가 일치하지 않습니다");
         }
 
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
-
-        return new MsgResponseDto("로그인 성공", HttpStatus.OK.value());
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getLoginId()));
     }
 
 }
