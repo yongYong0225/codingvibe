@@ -37,11 +37,11 @@ public class PostLikeService {
             postLikeRepository.saveAndFlush(new PostLike(post, user));
             post.updateLikeCount(1);
             postRepository.save(post);
-            return new MsgResponseDto("좋아요 완료", HttpStatus.OK.value());
+            return new MsgResponseDto("좋아요 완료");
         } else {
             postLikeRepository.deleteByPostIdAndUserId(postId, user.getId());
             post.updateLikeCount(-1);
-            return new MsgResponseDto("좋아요 취소", HttpStatus.OK.value());
+            return new MsgResponseDto("좋아요 취소");
         }
 
     }
