@@ -3,8 +3,15 @@ package com.sparta.myboard.service;
 import com.sparta.myboard.dto.*;
 import com.sparta.myboard.entity.Comment;
 import com.sparta.myboard.entity.Post;
+import com.sparta.myboard.entity.PostLike;
 import com.sparta.myboard.entity.User;
+import com.sparta.myboard.repository.PostLikeRepository;
 import com.sparta.myboard.repository.PostRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,12 +19,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
+
+    @Transactional(readOnly = true)
+    public boolean checkPostLike(Long postId, User user) {
+        Optional<PostLike> postLike = postLikeRepository.findByPostIdAndUserId(postId, user.getId());
+        return postLike.isEmpty();
+    }
 
     // 게시글 작성
     @Transactional
@@ -30,11 +45,11 @@ public class PostService {
 
     // 메인 페이지 게시글 목록 조회
     @Transactional(readOnly = true)
-    public List<MainPostResponseDto> getPosts() {
+    public List<MainPostResponseDto> getPosts(User user) {
         List<MainPostResponseDto> mainPostList = new ArrayList<>();
         List<Post> postList = postRepository.findAllPostByOrderByCreatedAtDesc();
         for (Post post : postList) {
-            mainPostList.add(new MainPostResponseDto(post, post.getLikeCount()));
+            mainPostList.add(new MainPostResponseDto(post, checkPostLike(post.getId(), user)));
         }
         return mainPostList; // 최종 반환
     }
@@ -86,9 +101,10 @@ public class PostService {
         List<MainPostResponseDto> mainPostList = new ArrayList<>();
         List<Post> postList = postRepository.findByCategory(category);
         for(Post post: postList) {
-            mainPostList.add(new MainPostResponseDto(post));
+            mainPostList.add(new MainPostResponseDto(post,checkPostLike(post.getId(), post.getUser())));
         }
         return mainPostList;
     }
+
 }
 

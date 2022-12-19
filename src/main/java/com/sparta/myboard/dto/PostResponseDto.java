@@ -20,6 +20,7 @@ public class PostResponseDto {
     private int likeCount;
 
 
+
     public PostResponseDto(Post entity) {
         this.postId = entity.getId();
         this.title = entity.getTitle();
@@ -42,4 +43,6 @@ public class PostResponseDto {
         this.createdAt = post.getCreatedAt();
         this.commentList = commentList;
     }
+
+
 }

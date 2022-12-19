@@ -16,8 +16,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/posts") // 전체 게시글 목록 조회
-    public List<MainPostResponseDto> getPosts() { //#1 메서드 실행
-        return postService.getPosts(); //#8 서비스가 리턴한 데이터를 클라이언트에게 리턴한다.
+    public List<MainPostResponseDto> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) { //#1 메서드 실행
+        return postService.getPosts(userDetails.getUser()); //#8 서비스가 리턴한 데이터를 클라이언트에게 리턴한다.
     }
 
     @PostMapping("/posts") // 게시글 작성

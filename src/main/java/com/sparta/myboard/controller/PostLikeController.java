@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/like")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class PostLikeController {
 
     private final PostLikeService postLikeService;
 
-    @PostMapping("/post/{postId}")
+    @PostMapping("/posts/{postId}/like")
     public MsgResponseDto savePostLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postLikeService.savePostLike(postId, userDetails.getUser());
     }
