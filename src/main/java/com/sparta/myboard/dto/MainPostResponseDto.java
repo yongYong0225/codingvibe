@@ -13,17 +13,15 @@ public class MainPostResponseDto {
     private String youtubeUrl;
     private int likeCount;
 
-    private boolean checkPostLike;
 
 
 
-    public MainPostResponseDto(Post post, boolean checkPostLike) {
+    public MainPostResponseDto(Post post) {
         this.postId = post.getId();
         this.nickname = post.getUser().getNickname();
         this.youtubeUrl = post.getYoutubeUrl();
         this.title = post.getTitle();
         this.likeCount = post.getLikeCount();
-        this.checkPostLike = checkPostLike;
     }
 
 

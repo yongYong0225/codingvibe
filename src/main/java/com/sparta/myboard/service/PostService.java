@@ -5,21 +5,23 @@ import com.sparta.myboard.entity.Comment;
 import com.sparta.myboard.entity.Post;
 import com.sparta.myboard.entity.PostLike;
 import com.sparta.myboard.entity.User;
+import com.sparta.myboard.jwt.JwtUtil;
 import com.sparta.myboard.repository.PostLikeRepository;
 import com.sparta.myboard.repository.PostRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import com.sparta.myboard.repository.UserRepository;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.RequestEntity.post;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,8 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public boolean checkPostLike(Long postId, User user) {
@@ -45,19 +49,19 @@ public class PostService {
 
     // 메인 페이지 게시글 목록 조회
     @Transactional(readOnly = true)
-    public List<MainPostResponseDto> getPosts(User user) {
+    public List<MainPostResponseDto> getPosts() {
         List<MainPostResponseDto> mainPostList = new ArrayList<>();
         List<Post> postList = postRepository.findAllPostByOrderByCreatedAtDesc();
-        for (Post post : postList) {
-            mainPostList.add(new MainPostResponseDto(post, checkPostLike(post.getId(), user)));
+        for(Post post : postList){
+            mainPostList.add(new MainPostResponseDto(post));
         }
         return mainPostList; // 최종 반환
     }
 
 
-    // 선택 게시글 조회
+    // 상세 게시글 조회
     @Transactional(readOnly = true)
-    public PostResponseDto getPost(Long id) {
+    public PostResponseDto getPost(Long id, HttpServletRequest request) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
@@ -66,7 +70,18 @@ public class PostService {
         for (Comment comment : post.getComments()) {
             commentList.add(new CommentResponseDto(comment));
         }
-        return new PostResponseDto(post, commentList);
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if(token != null && jwtUtil.validateToken(token)) {
+            //토큰에서 사용자 정보 가져오기
+            claims = jwtUtil.getUserInfoFromToken(token);
+            User user = userRepository.findByLoginId(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+            return new PostResponseDto(post, commentList, checkPostLike(post.getId(), user));
+        }
+        return new PostResponseDto(post, commentList, true);
     }
 
     // 게시글 수정
@@ -101,7 +116,7 @@ public class PostService {
         List<MainPostResponseDto> mainPostList = new ArrayList<>();
         List<Post> postList = postRepository.findByCategory(category);
         for(Post post: postList) {
-            mainPostList.add(new MainPostResponseDto(post,checkPostLike(post.getId(), post.getUser())));
+            mainPostList.add(new MainPostResponseDto(post));
         }
         return mainPostList;
     }

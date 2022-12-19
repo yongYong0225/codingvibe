@@ -19,6 +19,8 @@ public class PostResponseDto {
     private LocalDateTime createdAt;
     private int likeCount;
 
+    private boolean checkPostLike;
+
 
 
     public PostResponseDto(Post entity) {
@@ -33,7 +35,7 @@ public class PostResponseDto {
 
     private List<CommentResponseDto> commentList = new ArrayList<>();
 
-    public PostResponseDto(Post post, List<CommentResponseDto> commentList) { // 좋아요 체크 넣으시면 됩니다:)
+    public PostResponseDto(Post post, List<CommentResponseDto> commentList, boolean checkPostLike) { // 좋아요 체크 넣으시면 됩니다:)
         this.postId = post.getId();
         this.title = post.getTitle();
         this.nickname = post.getUser().getNickname();
@@ -41,6 +43,7 @@ public class PostResponseDto {
         this.content = post.getContent();
         this.likeCount = post.getLikeCount();
         this.createdAt = post.getCreatedAt();
+        this.checkPostLike = checkPostLike;
         this.commentList = commentList;
     }
 
