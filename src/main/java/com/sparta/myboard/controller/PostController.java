@@ -42,7 +42,7 @@ public class PostController {
         return postService.deletePost(id, userDetails.getUser());
     }
 
-    @GetMapping("/posts/category")
+    @GetMapping("/posts/category") //카테고리별 게시글 조회
     public List<MainPostResponseDto> getPostCategory(@RequestParam String category) {
         return postService.getPostCategory(category);
     }

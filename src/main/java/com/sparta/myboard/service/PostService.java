@@ -81,6 +81,7 @@ public class PostService {
     }
 
     //카테고리별 게시글 조회
+    @Transactional
     public List<MainPostResponseDto> getPostCategory(String category) {
         List<MainPostResponseDto> mainPostList = new ArrayList<>();
         List<Post> postList = postRepository.findByCategory(category);
