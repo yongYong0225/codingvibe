@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     //ID, pw에 맞는 Post로 찾아옴
     Optional<Post> findById(Long id);
-
     Boolean existsByIdAndUsername(Long id, String username);
+    List<Post> findByCategory(String category);
 
 }

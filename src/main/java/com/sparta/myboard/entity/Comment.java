@@ -14,7 +14,7 @@ public class Comment extends Timestamped {
     private Long commentId;
 
     @Column(nullable = false)
-    private String username;
+    private String nickname;
 
     @Column(nullable = false)
     private String comment;  // 댓글 내용
@@ -30,7 +30,7 @@ public class Comment extends Timestamped {
 
     public Comment(CommentRequestDto commentRequestDto, Post post, User user) {
         this.comment = commentRequestDto.getComment();
-        this.username = user.getUsername();
+        this.nickname = user.getNickname();
         this.post = post;
         this.user = user;
     }

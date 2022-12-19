@@ -17,21 +17,22 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String loginId;
+
+    @Column(nullable = false, unique = true)
+
+    private String nickname;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private UserRoleEnum role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Post> post = new ArrayList<>();
 
-    public User(String username, String password, UserRoleEnum role) {
-        this.username = username;
+    public User(String loginId, String nickname, String password) {
+        this.loginId = loginId;
+        this.nickname = nickname;
         this.password = password;
-        this.role = role;
     }
 }

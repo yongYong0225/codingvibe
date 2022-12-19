@@ -51,13 +51,13 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createToken(String username, UserRoleEnum role) {
+    public String createToken(String nickname) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(username)
-                        .claim(AUTHORIZATION_KEY, role)
+                        .setSubject(nickname)
+//                        .claim(AUTHORIZATION_KEY, role) 사용자 속성 관리..?
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
