@@ -34,7 +34,7 @@ public class PostService {
         List<MainPostResponseDto> mainPostList = new ArrayList<>();
         List<Post> postList = postRepository.findAllPostByOrderByCreatedAtDesc();
         for (Post post : postList) {
-            mainPostList.add(new MainPostResponseDto(post));
+            mainPostList.add(new MainPostResponseDto(post, post.getLikeCount()));
         }
         return mainPostList; // 최종 반환
     }
