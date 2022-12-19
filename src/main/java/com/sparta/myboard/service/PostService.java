@@ -71,9 +71,9 @@ public class PostService {
 
     // 게시글 삭제
     @Transactional
-    public MsgResponseDto deletePost(Long id, User user) {
-        if (postRepository.existsByIdAndUser(id, user)){
-            postRepository.deleteById(id);
+    public MsgResponseDto deletePost(Long postId, User user) {
+        if (postRepository.existsByIdAndUser(postId, user)){
+            postRepository.deleteById(postId);
             return new MsgResponseDto("게시글이 삭제되었습니다.");
         } else {
             throw new IllegalArgumentException("게시글 삭제 실패");
