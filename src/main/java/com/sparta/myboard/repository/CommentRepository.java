@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    Optional<Comment> findByIdAndUserId(Long cmtId, Long UserId);
+    Boolean existsByIdAndUsername(Long id, String username);
 }

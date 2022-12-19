@@ -9,28 +9,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/posts/{postId}/comments")
+@RequestMapping("/api/posts/{postId}")
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
     // 댓글 작성
-    @PostMapping
+    @PostMapping("/comments")
     public CommentResponseDto createComment(@PathVariable Long postId,
                                                             @RequestBody CommentRequestDto commentRequestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.createComment(postId, commentRequestDto, userDetails.getUser());
     }
     // 댓글 수정
-    @PutMapping("/{commentId}")
+    @PutMapping("/comments/{commentId}")
     public CommentResponseDto updateComment(@PathVariable Long postId, @PathVariable Long commentId,
                                                             @RequestBody CommentRequestDto commentRequestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.updateComment(postId, commentId, commentRequestDto, userDetails.getUser());
     }
     //댓글 삭제
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public MsgResponseDto deleteComment(@PathVariable Long postId, @PathVariable Long commentId,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return new MsgResponseDto();
