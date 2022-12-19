@@ -17,17 +17,11 @@ import java.util.List;
 public class Post extends Timestamped{
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String userId;
-
-    @Column
+    @Column(nullable = false)
     private String youtubeUrl;
-
-    @Column (nullable = false)
-    private String nickname;
 
     @Column(nullable = false)
     private String title;
@@ -49,16 +43,20 @@ public class Post extends Timestamped{
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments = new ArrayList<>();
 
-    public Post(PostRequestDto requestDto, String username){
+    public Post(PostRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.nickname = username;
+        this.user = user;
+        this.category = requestDto.getCategory();
+        this.youtubeUrl = requestDto.getYoutubeUrl();
     }
 
-    public void update(PostRequestDto requestDto, String nickname){
+    public void update(PostRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.nickname = nickname;
+        this.user = user;
+        this.category = requestDto.getCategory();
+        this.youtubeUrl = requestDto.getYoutubeUrl();
     }
 
     public void updateLikeCount(int likeCount){

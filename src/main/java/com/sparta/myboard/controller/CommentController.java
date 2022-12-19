@@ -18,13 +18,13 @@ public class CommentController {
     // 댓글 작성
     @PostMapping("/comments")
     public CommentResponseDto createComment(@PathVariable Long postId,
-                                                            @RequestBody CommentRequestDto commentRequestDto,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                            @RequestBody CommentRequestDto commentRequestDto,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.createComment(postId, commentRequestDto, userDetails.getUser());
     }
     // 댓글 수정
     @PutMapping("/comments/{commentId}")
-    public CommentResponseDto updateComment(@PathVariable Long postId, @PathVariable Long commentId,
+    public MsgResponseDto updateComment(@PathVariable Long postId, @PathVariable Long commentId,
                                                             @RequestBody CommentRequestDto commentRequestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.updateComment(postId, commentId, commentRequestDto, userDetails.getUser());

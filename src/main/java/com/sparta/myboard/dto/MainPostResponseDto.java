@@ -6,19 +6,19 @@ public class MainPostResponseDto {
     private String nickname;
     private String title;
     private String youtubeUrl;
-    private Long likeCount;
+    private int likeCount;
 
 
 
     public MainPostResponseDto(Post post) {
-        this.nickname = post.getNickname();
+        this.nickname = post.getUser().getNickname();
         this.youtubeUrl = post.getYoutubeUrl();
         this.title = post.getTitle();
     }
 
 
-    public MainPostResponseDto(Post post, Long likeCount) {
-        this.nickname = post.getNickname();
+    public MainPostResponseDto(Post post, int likeCount) {
+        this.nickname = post.getUser().getNickname();
         this.title = post.getTitle();
         this.likeCount = likeCount;
     }

@@ -24,12 +24,12 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(SignupRequestDto signupRequestDto) {
+    public String signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
         return "redirect:/api/login";
     }
 
-    @ResponseBody
+
     @PostMapping("/login")
     public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         userService.login(loginRequestDto, response);

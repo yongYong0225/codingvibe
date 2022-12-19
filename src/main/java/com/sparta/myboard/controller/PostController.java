@@ -25,21 +25,21 @@ public class PostController {
         return postService.createPost(requestDto, userDetails.getUser());
     }
 
-    @GetMapping("/posts/{id}") // 선택한 게시글 조회
+    @GetMapping("/posts/{postId}") // 선택한 게시글 조회
     //@PathVariable => {id}에 들어오는 값을 Long id에 담아줌 (받을데이터가 1개일때)
     //@requestBody => json 형식 (받을 데이터가 여러개일때)
-    public PostResponseDto getPost(@PathVariable Long id){
-        return postService.getPost(id);
+    public PostResponseDto getPost(@PathVariable Long postId){
+        return postService.getPost(postId);
     }
 
-    @PutMapping("/posts/{id}") //선택한 게시글 수정
-    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return postService.updatePost(id, requestDto, userDetails.getUser());
+    @PutMapping("/posts/{postId}") //선택한 게시글 수정
+    public MsgResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.updatePost(postId, requestDto, userDetails.getUser());
     }
 
-    @DeleteMapping("/posts/{id}") //선택한 게시글 삭제
-    public MsgResponseDto deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.deletePost(id, userDetails.getUser());
+    @DeleteMapping("/posts/{postId}") //선택한 게시글 삭제
+    public MsgResponseDto deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.deletePost(postId, userDetails.getUser());
     }
 
     @GetMapping("/posts/category") //카테고리별 게시글 조회

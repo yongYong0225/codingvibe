@@ -2,6 +2,7 @@ package com.sparta.myboard.service;
 
 import com.sparta.myboard.dto.*;
 import com.sparta.myboard.entity.User;
+import com.sparta.myboard.entity.UserRoleEnum;
 import com.sparta.myboard.jwt.JwtUtil;
 import com.sparta.myboard.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +31,12 @@ public class UserService {
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         //회원 중복 확인, 받아온 값이 유저레포지토리에 있는지 확인
-        Optional<User> foundId = userRepository.findByUsername(loginId);
+        Optional<User> foundId = userRepository.findByLoginId(loginId);
         if (foundId.isPresent()) { //존재하는 것을 찾았다면 에러처리
             throw new IllegalArgumentException("중복된 loginId 입니다.");
         }
 
-        Optional<User> foundNickname = userRepository.findByUsername(nickname);
+        Optional<User> foundNickname = userRepository.findByNickname(nickname);
         if (foundNickname.isPresent()) { //존재하는 것을 찾았다면 에러처리
             throw new IllegalArgumentException("중복된 nickname 입니다.");
         }
@@ -51,7 +52,7 @@ public class UserService {
         String password = loginRequestDto.getPassword();
 
         //사용자 확인
-        User user = userRepository.findByUsername(loginId).orElseThrow(
+        User user = userRepository.findByLoginId(loginId).orElseThrow(
                 () -> new IllegalArgumentException("등록된 ID가 없습니다.")
         );
 

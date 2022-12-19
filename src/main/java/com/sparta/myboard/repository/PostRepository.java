@@ -1,6 +1,7 @@
 package com.sparta.myboard.repository;
 
 import com.sparta.myboard.entity.Post;
+import com.sparta.myboard.entity.User;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     //ID, pw에 맞는 Post로 찾아옴
     Optional<Post> findById(Long id);
-    Boolean existsByIdAndUsername(Long id, String username);
+    Boolean existsByIdAndUser(Long id, User user);
     List<Post> findByCategory(String category);
 
 }

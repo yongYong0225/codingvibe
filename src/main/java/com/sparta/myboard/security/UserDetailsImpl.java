@@ -1,6 +1,7 @@
 package com.sparta.myboard.security;
 
 import com.sparta.myboard.entity.User;
+import com.sparta.myboard.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,11 +12,11 @@ import java.util.Collection;
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
-    private final String username;
+    private final String loginId;
 
-    public UserDetailsImpl(User user, String username) {
+    public UserDetailsImpl(User user, String loginId) {
         this.user = user;
-        this.username = username;
+        this.loginId = loginId;
     }
 
     public User getUser() {
@@ -36,7 +37,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.getUser().getLoginId();
     }
 
     @Override

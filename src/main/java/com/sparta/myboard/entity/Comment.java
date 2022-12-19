@@ -11,10 +11,7 @@ import javax.persistence.*;
 public class Comment extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
-
-    @Column(nullable = false)
-    private String nickname;
+    private Long id;
 
     @Column(nullable = false)
     private String comment;  // 댓글 내용
@@ -30,14 +27,13 @@ public class Comment extends Timestamped {
 
     public Comment(CommentRequestDto commentRequestDto, Post post, User user) {
         this.comment = commentRequestDto.getComment();
-        this.nickname = user.getNickname();
         this.post = post;
         this.user = user;
     }
 
 
-    public void update(CommentRequestDto commentRequestDto, String nickname) {
-        this.nickname = nickname;
+    public void update(CommentRequestDto commentRequestDto) {
+        this.comment = commentRequestDto.getComment();
     }
 }
 

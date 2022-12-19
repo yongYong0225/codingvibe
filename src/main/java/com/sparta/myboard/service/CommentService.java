@@ -31,13 +31,13 @@ public class CommentService {
 
     // 댓글 수정
     @Transactional
-    public MsgResponseDto updateComment(Long id, Long commentId, CommentRequestDto commentRequestDto, User user) {
+    public MsgResponseDto updateComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, User user) {
 
-        if (commentRepository.existsByIdAndUsername(commentId, user.getNickname())) {
-            Comment commnet = commentRepository.findById(id).orElseThrow(
+        if (commentRepository.existsByIdAndUser(commentId, user)) {
+            Comment commnet = commentRepository.findById(postId).orElseThrow(
                     () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
             );
-            commnet.update(commentRequestDto, user.getNickname());
+            commnet.update(commentRequestDto);
             return new MsgResponseDto("댓글이 수정되었습니다.");
         } else {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
@@ -46,8 +46,8 @@ public class CommentService {
 
     // 댓글 삭제
     @Transactional
-    public MsgResponseDto deleteComment(Long id, Long commentId, User user) {
-        if (commentRepository.existsByIdAndUsername(commentId, user.getNickname())){
+    public MsgResponseDto deleteComment(Long postId, Long commentId, User user) {
+        if (commentRepository.existsByIdAndUser(commentId, user)){
             commentRepository.deleteById(commentId);
             return new MsgResponseDto("댓글이 삭제되었습니다.");
         } else {

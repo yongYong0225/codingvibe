@@ -22,7 +22,7 @@ public class PostService {
     // 게시글 작성
     @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        Post post = new Post(requestDto, user.getNickname());
+        Post post = new Post(requestDto, user);
         post = postRepository.save(post);
         post.setUser(user);
         return new PostResponseDto(post);
@@ -56,14 +56,14 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public PostResponseDto updatePost(Long id, PostRequestDto requestDto, User user) {
+    public MsgResponseDto updatePost(Long id, PostRequestDto requestDto, User user) {
 
-        if (postRepository.existsByIdAndUsername(id, user.getNickname())) {
+        if (postRepository.existsByIdAndUser(id, user)) {
             Post post = postRepository.findById(id).orElseThrow(
                     () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
             );
-            post.update(requestDto, user.getNickname());
-            return new PostResponseDto(post);
+            post.update(requestDto, user);
+            return new MsgResponseDto("게시글이 수정되었습니다.");
         } else {
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
         }
@@ -72,9 +72,9 @@ public class PostService {
     // 게시글 삭제
     @Transactional
     public MsgResponseDto deletePost(Long id, User user) {
-        if (postRepository.existsByIdAndUsername(id, user.getNickname())){
+        if (postRepository.existsByIdAndUser(id, user)){
             postRepository.deleteById(id);
-            return new MsgResponseDto("게시글 삭제 성공");
+            return new MsgResponseDto("게시글이 삭제되었습니다.");
         } else {
             throw new IllegalArgumentException("게시글 삭제 실패");
         }
