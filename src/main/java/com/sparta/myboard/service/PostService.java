@@ -22,30 +22,23 @@ public class PostService {
     // 게시글 작성
     @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
-        //토큰 검사
-
-        Post post = new Post(requestDto, user.getUsername());
+        Post post = new Post(requestDto, user.getNickname());
         post = postRepository.save(post);
         post.setUser(user);
         return new PostResponseDto(post);
     }
 
-    // 전체 게시글 목록 조회
+    // 메인 페이지 게시글 목록 조회
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getPosts() {
+    public List<MainPostResponseDto> getPosts() {
+        List<MainPostResponseDto> mainPostList = new ArrayList<>();
         List<Post> postList = postRepository.findAllPostByOrderByCreatedAtDesc();
-        List<PostResponseDto> postResponseDto = new ArrayList<>();
-
         for (Post post : postList) {
-            List<CommentResponseDto> commentList = new ArrayList<>();
-            for (Comment comment : post.getComments()) {
-                commentList.add(new CommentResponseDto(comment)); // (comment, __) 좋아요 담으세요:)
-            }
-            // new PostResponseDto에 옮겨담은 post를 postResponseDto에 추가
-            postResponseDto.add(new PostResponseDto(post, commentList)); // (post,__ ) 좋아요 담으세요:)
+            mainPostList.add(new MainPostResponseDto(post));
         }
-        return postResponseDto; // 최종 반환
+        return mainPostList; // 최종 반환
     }
+
 
     // 선택 게시글 조회
     @Transactional(readOnly = true)
@@ -56,24 +49,20 @@ public class PostService {
         // 새로 추가
         List<CommentResponseDto> commentList = new ArrayList<>();
         for (Comment comment : post.getComments()) {
-            commentList.add(new CommentResponseDto(comment)); // (comment, __) 좋아요 담으세요:)
+            commentList.add(new CommentResponseDto(comment));
         }
-        return new PostResponseDto(post, commentList); // (post, __) 좋아요 담으세요:)
+        return new PostResponseDto(post, commentList);
     }
 
     // 게시글 수정
     @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto requestDto, User user) {
 
-        UserRoleEnum userRoleEnum = user.getRole();
-
-        if (userRoleEnum == UserRoleEnum.ADMIN) {
-            Post post = postRepository.findById(id).get();
-            post.update(requestDto, user.getUsername());
-            return new PostResponseDto(post);
-        } else if (postRepository.existsByIdAndUsername(id, user.getUsername()) && userRoleEnum == UserRoleEnum.USER) {
-            Post post = postRepository.findById(id).get();
-            post.update(requestDto, user.getUsername());
+        if (postRepository.existsByIdAndUsername(id, user.getNickname())) {
+            Post post = postRepository.findById(id).orElseThrow(
+                    () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
+            );
+            post.update(requestDto, user.getNickname());
             return new PostResponseDto(post);
         } else {
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
@@ -83,19 +72,23 @@ public class PostService {
     // 게시글 삭제
     @Transactional
     public MsgResponseDto deletePost(Long id, User user) {
-
-        UserRoleEnum userRoleEnum = user.getRole();
-
-        //유효한 토큰일 경우 삭제
-        if (user.getRole().equals(UserRoleEnum.ADMIN)) {
+        if (postRepository.existsByIdAndUsername(id, user.getNickname())){
             postRepository.deleteById(id);
-            return new MsgResponseDto("게시글 삭제 성공", HttpStatus.OK.value());
-        } else if (postRepository.existsByIdAndUsername(id, user.getUsername()) && userRoleEnum == UserRoleEnum.USER){
-            postRepository.deleteById(id);
-            return new MsgResponseDto("게시글 삭제 성공", HttpStatus.OK.value());
+            return new MsgResponseDto("게시글 삭제 성공");
         } else {
             throw new IllegalArgumentException("게시글 삭제 실패");
         }
+    }
+
+    //카테고리별 게시글 조회
+    @Transactional
+    public List<MainPostResponseDto> getPostCategory(String category) {
+        List<MainPostResponseDto> mainPostList = new ArrayList<>();
+        List<Post> postList = postRepository.findByCategory(category);
+        for(Post post: postList) {
+            mainPostList.add(new MainPostResponseDto(post));
+        }
+        return mainPostList;
     }
 }
 
