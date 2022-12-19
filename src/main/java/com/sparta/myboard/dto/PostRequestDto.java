@@ -10,8 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 public class PostRequestDto {
-
-
     private String title;
     private String youtubeUrl;
     private String content;

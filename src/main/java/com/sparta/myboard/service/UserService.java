@@ -46,15 +46,15 @@ public class UserService {
         }
 
         //user 객체에 두 값을 저장
-        User user = new User(username, password, role);
+        User user = new User(nickname, password, role);
         userRepository.save(user);
 
-        return new MsgResponseDto("회원가입 성공", HttpStatus.OK.value());
+        return new MsgResponseDto("회원가입 성공");
     }
 
     @Transactional(readOnly = true)
     public MsgResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response){
-        String username = loginRequestDto.getUsername();
+        String username = loginRequestDto.getLoginId();
         String password = loginRequestDto.getPassword();
 
         //사용자 확인
@@ -67,9 +67,9 @@ public class UserService {
             throw  new IllegalArgumentException("회원을 찾을 수 없습니다.");
         }
 
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getNickname()));
 
-        return new MsgResponseDto("로그인 성공", HttpStatus.OK.value());
+        return new MsgResponseDto("로그인 성공");
     }
 
 }

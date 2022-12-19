@@ -20,14 +20,23 @@ public class Post extends Timestamped{
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column
+    private String userId;
+
+    @Column
+    private String youtubeUrl;
+
+    @Column (nullable = false)
+    private String nickname;
+
     @Column(nullable = false)
     private String title;
 
     @Column (nullable = false)
-    private String username;
+    private String content;
 
     @Column (nullable = false)
-    private String content;
+    private String category;
 
     @Column (nullable = false)
     private int likeCount;
@@ -43,13 +52,13 @@ public class Post extends Timestamped{
     public Post(PostRequestDto requestDto, String username){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.username = username;
+        this.nickname = username;
     }
 
-    public void update(PostRequestDto requestDto, String username){
+    public void update(PostRequestDto requestDto, String nickname){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.username = username;
+        this.nickname = nickname;
     }
 
     public void updateLikeCount(int likeCount){
