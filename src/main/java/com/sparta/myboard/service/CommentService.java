@@ -32,7 +32,7 @@ public class CommentService {
 
     // 댓글 수정
     @Transactional
-    public CommentResponseDto updateComment(Long postId, Long cmtId, CommentRequestDto commentRequestDto, User user) {
+    public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, User user) {
         // DB에 게시글 저장 확인
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
@@ -56,7 +56,7 @@ public class CommentService {
 
     // 댓글 삭제
     @Transactional
-    public CommentResponseDto deleteComment(Long postId, Long cmtId, User user) {
+    public CommentResponseDto deleteComment(Long postId, Long commentId, User user) {
         // DB에 게시글 저장 확인
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")

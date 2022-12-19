@@ -1,20 +1,17 @@
 package com.sparta.myboard.entity;
 
 import com.sparta.myboard.dto.CommentRequestDto;
-import com.sparta.myboard.dto.PostRequestDto;
-import jdk.jshell.Snippet;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 @Getter
-@Entity // entity로 사용
+@Entity
 @NoArgsConstructor
 public class Comment extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long commentId;
 
     @Column(nullable = false)
     private String username;
