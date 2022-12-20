@@ -18,15 +18,14 @@ public class UserController {
 
     private final UserService userService; //의존성주입
 
-    @GetMapping("signup")
+    @GetMapping("/signup")
     public ModelAndView signupPage(){
         return new ModelAndView("signup");
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+    public void signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
-        return "success";
     }
 
 
