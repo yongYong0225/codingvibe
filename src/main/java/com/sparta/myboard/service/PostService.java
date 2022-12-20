@@ -41,6 +41,7 @@ public class PostService {
     // 게시글 작성
     @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto, User user) {
+        requestDto.embedUrl(requestDto.getYoutubeUrl());
         Post post = new Post(requestDto, user);
         post = postRepository.save(post);
         post.setUser(user);
