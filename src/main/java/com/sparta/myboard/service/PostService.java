@@ -47,11 +47,11 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
-    // 메인 페이지 게시글 목록 조회
+
     @Transactional(readOnly = true)
     public List<MainPostResponseDto> getPosts() {
         List<MainPostResponseDto> mainPostList = new ArrayList<>();
-        List<Post> postList = postRepository.findAllPostByOrderByCreatedAtDesc();
+        List<Post> postList = postRepository.findBestPost();
         for(Post post : postList){
             mainPostList.add(new MainPostResponseDto(post));
         }

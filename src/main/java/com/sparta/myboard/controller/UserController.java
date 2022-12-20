@@ -31,9 +31,8 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto, response);
-        return "success";
+    public LoginNicknameResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        return userService.login(loginRequestDto, response);
     }
 
 }

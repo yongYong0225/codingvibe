@@ -4,6 +4,7 @@ import com.sparta.myboard.entity.Post;
 import com.sparta.myboard.entity.User;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -21,5 +22,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findById(Long id);
     Boolean existsByIdAndUser(Long id, User user);
     List<Post> findByCategory(String category);
+
+    @Query(nativeQuery = true, value="select * from post order by like_count desc limit 3")
+    List<Post> findBestPost();
 
 }
