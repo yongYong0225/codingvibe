@@ -46,7 +46,7 @@ public class CommentService {
 
     // 댓글 삭제
     @Transactional
-    public MsgResponseDto deleteComment(Long postId, Long commentId, User user) {
+    public MsgResponseDto deleteComment(Long commentId, User user ) {
         if (commentRepository.existsByIdAndUser(commentId, user)){
             commentRepository.deleteById(commentId);
             return new MsgResponseDto("댓글이 삭제되었습니다.");

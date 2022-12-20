@@ -31,8 +31,8 @@ public class CommentController {
     }
     //댓글 삭제
     @DeleteMapping("/comments/{commentId}")
-    public MsgResponseDto deleteComment(@PathVariable Long postId, @PathVariable Long commentId,
+    public MsgResponseDto deleteComment(@PathVariable Long commentId,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return new MsgResponseDto();
+        return commentService.deleteComment(commentId, userDetails.getUser());
     }
 }
