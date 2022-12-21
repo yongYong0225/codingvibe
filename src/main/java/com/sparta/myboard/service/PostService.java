@@ -5,6 +5,9 @@ import com.sparta.myboard.entity.Comment;
 import com.sparta.myboard.entity.Post;
 import com.sparta.myboard.entity.PostLike;
 import com.sparta.myboard.entity.User;
+import com.sparta.myboard.exception.customexception.ErrorCode;
+import com.sparta.myboard.exception.customexception.PostCustomException;
+import com.sparta.myboard.exception.customexception.UserCustomException;
 import com.sparta.myboard.jwt.JwtUtil;
 import com.sparta.myboard.repository.PostLikeRepository;
 import com.sparta.myboard.repository.PostRepository;
@@ -64,7 +67,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponseDto getPost(Long id, HttpServletRequest request) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new PostCustomException(ErrorCode.POST_NOT_FOUND)
         );
         // 새로 추가
         List<CommentResponseDto> commentList = new ArrayList<>();
@@ -78,7 +81,7 @@ public class PostService {
             //토큰에서 사용자 정보 가져오기
             claims = jwtUtil.getUserInfoFromToken(token);
             User user = userRepository.findByLoginId(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new UserCustomException(ErrorCode.USER_NOT_FOUND)
             );
             return new PostResponseDto(post, commentList, checkPostLike(post.getId(), user));
         }
@@ -91,12 +94,12 @@ public class PostService {
 
         if (postRepository.existsByIdAndUser(id, user)) {
             Post post = postRepository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
+                    () -> new PostCustomException(ErrorCode.POST_NOT_FOUND)
             );
             post.update(requestDto, user);
             return new MsgResponseDto("게시글이 수정되었습니다.");
         } else {
-            throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
+            throw new UserCustomException(ErrorCode.NOT_ALLOW_UPDATE);
         }
     }
 
@@ -107,7 +110,7 @@ public class PostService {
             postRepository.deleteById(postId);
             return new MsgResponseDto("게시글이 삭제되었습니다.");
         } else {
-            throw new IllegalArgumentException("게시글 삭제 실패");
+            throw new UserCustomException(ErrorCode.NOT_ALLOW_DELETE);
         }
     }
 
