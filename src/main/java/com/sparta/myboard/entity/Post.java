@@ -46,7 +46,7 @@ public class Post extends Timestamped{
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE) // 게시글이 삭제되면 댓글도 삭제
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments = new ArrayList<>();
 
