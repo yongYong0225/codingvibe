@@ -5,6 +5,8 @@ import com.sparta.myboard.dto.MsgResponseDto;
 import com.sparta.myboard.entity.Post;
 import com.sparta.myboard.entity.PostLike;
 import com.sparta.myboard.entity.User;
+import com.sparta.myboard.exception.customexception.ErrorCode;
+import com.sparta.myboard.exception.customexception.PostCustomException;
 import com.sparta.myboard.repository.PostLikeRepository;
 import com.sparta.myboard.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,7 @@ public class PostLikeService {
     @Transactional
     public MsgResponseDto savePostLike(Long postId, User user){
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NullPointerException("게시글이 존재하지 않습니다.")
+                () -> new PostCustomException(ErrorCode.POST_NOT_FOUND)
         );
         //커밋테스트
         if(checkPostLike(postId, user)) {
