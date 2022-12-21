@@ -58,7 +58,7 @@ public class WebSecurityConfig {
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
 
-        http.formLogin().loginPage("/api/user/login-page").permitAll();
+//        http.formLogin().loginPage("/api/user/login-page").permitAll();
 
         http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
 

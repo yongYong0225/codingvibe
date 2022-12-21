@@ -5,6 +5,8 @@ import com.sparta.myboard.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ import java.util.List;
 @Setter
 @Entity // entity로 사용
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id=?")
+@Where(clause = "is_deleted=false")
 public class Post extends Timestamped{
 
     @Id
@@ -34,6 +38,9 @@ public class Post extends Timestamped{
 
     @Column (nullable = false)
     private int likeCount;
+
+    @Column
+    private boolean isDeleted = Boolean.FALSE;
 
     @ManyToOne
     @JoinColumn(name="user_id")
