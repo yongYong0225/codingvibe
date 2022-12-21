@@ -6,6 +6,10 @@ import com.sparta.myboard.dto.MsgResponseDto;
 import com.sparta.myboard.entity.Comment;
 import com.sparta.myboard.entity.Post;
 import com.sparta.myboard.entity.User;
+import com.sparta.myboard.exception.customexception.CommentCustomException;
+import com.sparta.myboard.exception.customexception.ErrorCode;
+import com.sparta.myboard.exception.customexception.PostCustomException;
+import com.sparta.myboard.exception.customexception.UserCustomException;
 import com.sparta.myboard.repository.CommentRepository;
 import com.sparta.myboard.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +26,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createComment(Long id, CommentRequestDto commentRequestDto, User user) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new PostCustomException(ErrorCode.POST_NOT_FOUND)
         );
         Comment comment = commentRepository.save(new Comment(commentRequestDto, post, user));
 
@@ -35,12 +39,12 @@ public class CommentService {
 
         if (commentRepository.existsByIdAndUser(commentId, user)) {
             Comment comment = commentRepository.findById(commentId).orElseThrow(
-                    () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
+                    () -> new CommentCustomException(ErrorCode.COMMENT_NOT_FOUND)
             );
             comment.update(commentRequestDto);
             return new CommentResponseDto(comment);
         } else {
-            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+            throw new UserCustomException(ErrorCode.NOT_ALLOW_UPDATE);
         }
 
     }
@@ -52,7 +56,7 @@ public class CommentService {
             commentRepository.deleteById(commentId);
             return new MsgResponseDto("댓글이 삭제되었습니다.");
         } else {
-            throw new IllegalArgumentException("댓글 삭제 실패");
+            throw new UserCustomException(ErrorCode.NOT_ALLOW_DELETE);
         }
     }
 }
