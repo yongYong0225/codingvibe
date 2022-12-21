@@ -24,10 +24,10 @@ public class CommentController {
     }
     // 댓글 수정
     @PutMapping("/comments/{commentId}")
-    public MsgResponseDto updateComment(@PathVariable Long postId, @PathVariable Long commentId,
+    public CommentResponseDto updateComment(@PathVariable Long commentId,
                                                             @RequestBody CommentRequestDto commentRequestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return commentService.updateComment(postId, commentId, commentRequestDto, userDetails.getUser());
+        return commentService.updateComment(commentId, commentRequestDto, userDetails.getUser());
     }
     //댓글 삭제
     @DeleteMapping("/comments/{commentId}")

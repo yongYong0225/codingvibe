@@ -31,17 +31,18 @@ public class CommentService {
 
     // 댓글 수정
     @Transactional
-    public MsgResponseDto updateComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, User user) {
+    public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
 
         if (commentRepository.existsByIdAndUser(commentId, user)) {
-            Comment commnet = commentRepository.findById(postId).orElseThrow(
+            Comment comment = commentRepository.findById(commentId).orElseThrow(
                     () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
             );
-            commnet.update(commentRequestDto);
-            return new MsgResponseDto("댓글이 수정되었습니다.");
+            comment.update(commentRequestDto);
+            return new CommentResponseDto(comment);
         } else {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
+
     }
 
     // 댓글 삭제
