@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 public class SignupRequestDto {
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z]).{4,10}$", message = "아이디는 알파벳 소문자와 숫자로 구성된 4~20자리여야 합니다.")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z]).{4,10}$", message = "아이디는 알파벳 소문자와 숫자로 구성된 4~10자리여야 합니다.")
     private String loginId;
 
     @NotBlank(message = "닉네임을 입력하세요")

@@ -1,8 +1,10 @@
 package com.sparta.myboard.controller;
 
 import com.sparta.myboard.dto.*;
+import com.sparta.myboard.security.UserDetailsImpl;
 import com.sparta.myboard.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,6 +34,11 @@ public class UserController {
     @PostMapping("/login")
     public LoginNicknameResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return userService.login(loginRequestDto, response);
+    }
+
+    @DeleteMapping("/deleteUser/{loginId}")
+    public MsgResponseDto deleteUser(@PathVariable String loginId, @RequestBody DeleteUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.deleteUser(loginId, requestDto, userDetails.getUser());
     }
 
 }

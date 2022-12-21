@@ -67,4 +67,20 @@ public class UserService {
 
     }
 
+    @Transactional
+    public MsgResponseDto deleteUser(String loginId, DeleteUserRequestDto requestDto, User user){
+        String password = requestDto.getPassword();
+
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw  new IllegalArgumentException("패스워드가 일치하지 않습니다");
+        }
+
+        if(userRepository.existsByIdAndLoginId(user.getId(), loginId)){
+            userRepository.deleteById(user.getId());
+            return new MsgResponseDto("탈퇴완료");
+        } else {
+            throw new IllegalArgumentException("탈퇴실패");
+        }
+    }
+
 }
