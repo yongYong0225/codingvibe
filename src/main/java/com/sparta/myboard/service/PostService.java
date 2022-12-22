@@ -91,7 +91,7 @@ public class PostService {
     // 게시글 수정
     @Transactional
     public MsgResponseDto updatePost(Long id, PostRequestDto requestDto, User user) {
-
+        requestDto.embedUrl(requestDto.getYoutubeUrl());
         if (postRepository.existsByIdAndUser(id, user)) {
             Post post = postRepository.findById(id).orElseThrow(
                     () -> new PostCustomException(ErrorCode.POST_NOT_FOUND)

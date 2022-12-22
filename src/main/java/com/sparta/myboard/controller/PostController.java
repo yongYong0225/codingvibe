@@ -36,7 +36,7 @@ public class PostController {
     }
 
     @PutMapping("/posts/{postId}") //선택한 게시글 수정
-    public MsgResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public MsgResponseDto updatePost(@PathVariable Long postId, @RequestBody @Valid PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return postService.updatePost(postId, requestDto, userDetails.getUser());
     }
 

@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Boolean existsByIdAndUser(Long id, User user);
     List<Post> findByCategory(String category);
 
-    @Query(nativeQuery = true, value="select * from post order by like_count desc limit 3")
+    @Query(nativeQuery = true, value="select * from post where is_deleted=false order by like_count desc limit 3")
     List<Post> findBestPost();
 
 }
