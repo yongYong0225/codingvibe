@@ -1,9 +1,12 @@
 ## Project 
 CodingVibe - 코딩하면서 듣는 노래 추천 사이트
+
 협업 notion : https://www.notion.so/Coding-Vibe-Mini-Project-ce76b6b3e4594016b5fe411a7a695b38
 
 
 ## 👯백엔드 팀원
+
+- 최진우 : https://github.com/woooo96
 
 
 
