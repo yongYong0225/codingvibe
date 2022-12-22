@@ -7,6 +7,7 @@ CodingVibe - 코딩하면서 듣는 노래 추천 사이트
 ## 👯백엔드 팀원
 
 - 최진우 : https://github.com/woooo96
+- 홍덕빈 : https://github.com/dorothyah
 
 
 
